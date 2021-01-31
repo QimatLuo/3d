@@ -1,3 +1,4 @@
+use <utils.scad>;
 $fn=50;
 s=10;
 g=0.5;
@@ -6,31 +7,33 @@ module base(r=0)
 {
     difference()
     {
-        cube([s-r*2,s*7-r*2,s-r*2],center=true);
+        kube([s,s*7,s],r=-r);
      
         translate([0,-s*2,-(s+g)/2])
-        cube(s+g+r*2,center=true);
+        kube(s+g,r=r);
         
         translate([0,s*2,(s+g)/2])
-        cube(s+g+r*2,center=true);
+        kube(s+g,r=r);
     }
 }
 
-module A(i=-1,r=0)
+module A(r=1,i=1)
 {
-    minkowski()
+    difference()
     {
-        difference()
-        {
-            base(r);
-            
-            translate([(s+g)/2*i,0,0])
-            cube(s+g+r*2,center=true);
-        }
-        sphere(r);
+        base(r);
+        
+        translate([(s+g)/2*i,0,0])
+        kube(s+g,r=r);
     }
 }
 
-A(1);
-//A(1, 1); // print * 10
-//A(-1, 1); // print * 2
+module B(r=1)
+{
+    A(r,i=-1);
+}
+
+A(0);
+
+//mink() A(); // print * 10
+//mink() B(); // print * 2
